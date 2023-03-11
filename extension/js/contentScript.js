@@ -11,7 +11,7 @@ function myFunction(){
         links.push(images[i].currentSrc);
     }
     
-    const s = JSON.stringify(images); // Stringify converts a JavaScript object or value to a JSON string (not sure whether this is necessary for us?)
+    // const s = JSON.stringify(images); // Stringify converts a JavaScript object or value to a JSON string (not sure whether this is necessary for us?)
     // console.log(s); // Prints the variables to console window, which are in the JSON format
     
     window.alert(s)
@@ -20,5 +20,5 @@ function myFunction(){
         url:"http://127.0.0.1:5000/test",
         type:"POST",
         contentType: "application/json",
-        data: JSON.stringify(s)});
+        data: JSON.stringify(links)});
 }

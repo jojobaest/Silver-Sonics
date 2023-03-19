@@ -68,9 +68,11 @@ def nearestValue(v, n): # n is # of segments
     index = roundHalfUp(v / increment)
     return index * increment
 
-urllib.request.urlretrieve('https://thumbs.dreamstime.com/b/mint-colored-low-contrast-concrete-textured-background-roughness-irregularities-trendy-to-your-design-product-color-162725143.jpg', "images\low.jpg")
 
-filename = "images\low.jpg"
+my_url = "https://thedomesticrebel.com/wp-content/uploads/2011/09/040.jpg"
+filename = "images\cupcake.jpg"
+
+urllib.request.urlretrieve(my_url, filename)
 input = Image.open(filename)
 
 pixel_map = input.load()
@@ -86,6 +88,7 @@ for i in range(width):
 
         # contrast using value
         v = nearestValue(v, 2)
+        s = nearestValue(s, 2)
         # print(h, s, v)
 
         # converting HSV(0-360, 0-1, 0-1) -> RGB(0-255, 0-255, 0-255)

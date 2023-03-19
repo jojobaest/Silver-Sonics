@@ -13,14 +13,16 @@
         "type": "module"
     },
     "permissions": [
-        "https://some-random-api.ml/*"
+        "https://some-random-api.ml/*",
+        "scripting",
+        "activeTab"
     ],
     "icons": {
       "48": "images/icon48.png"
     },
     "action": {
-        "default_popup": "index.html",
-        "default_title": "Image Editor"
+        "default_title": "Image Editor",
+        "default_popup": "index.html"
     }
 }
   

@@ -68,33 +68,32 @@ def nearestValue(v, n): # n is # of segments
     index = roundHalfUp(v / increment)
     return index * increment
 
+def highContrast(my_url, filename):
+    my_url = "https://sallysbakingaddiction.com/wp-content/uploads/2017/06/moist-chocolate-cupcakes-5.jpg"
+    filename = "images\cupcake.jpg"
 
-my_url = "https://thedomesticrebel.com/wp-content/uploads/2011/09/040.jpg"
-filename = "images\cupcake.jpg"
+    urllib.request.urlretrieve(my_url, filename)
+    input = Image.open(filename)
 
-urllib.request.urlretrieve(my_url, filename)
-input = Image.open(filename)
+    pixel_map = input.load()
 
-pixel_map = input.load()
+    width, height = input.size
 
-width, height = input.size
+    for i in range(width):
+        for j in range(height):
+            r, g, b = input.getpixel((i, j))
 
-for i in range(width):
-    for j in range(height):
-        r, g, b = input.getpixel((i, j))
+            # converting RGB(0-255, 0-255, 0-255) -> HSV(0-360, 0-1, 0-1)
+            h, s, v = rgb_to_hsv(r, g, b)
 
-        # converting RGB(0-255, 0-255, 0-255) -> HSV(0-360, 0-1, 0-1)
-        h, s, v = rgb_to_hsv(r, g, b)
+            # contrast using saturation & value
+            v = nearestValue(v, 2)
+            s = nearestValue(s, 2)
 
-        # contrast using value
-        v = nearestValue(v, 2)
-        s = nearestValue(s, 2)
-        # print(h, s, v)
+            # converting HSV(0-360, 0-1, 0-1) -> RGB(0-255, 0-255, 0-255)
+            rNew, gNew, bNew = hsv_to_rgb(h, s, v)
 
-        # converting HSV(0-360, 0-1, 0-1) -> RGB(0-255, 0-255, 0-255)
-        rNew, gNew, bNew = hsv_to_rgb(h, s, v)
+            pixel_map[i, j] = (int(rNew), int(gNew), int(bNew))
 
-        pixel_map[i, j] = (int(rNew), int(gNew), int(bNew))
-
-input.save("edited-"+filename)
-input.show()
+    input.save("edited-"+filename)
+    input.show()

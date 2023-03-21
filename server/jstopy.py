@@ -1,6 +1,7 @@
 from flask import Flask, request
 import json
 from flask import Flask, render_template
+from image_processing import highContrast
 #Set up Flask</strong>:
 app = Flask(__name__)
 
@@ -16,6 +17,7 @@ def test():
     print(type(output))
     result = json.loads(output) # This converts the json output to a python dictionary
     print(result) # Printing the new dictionary
+    highContrast(result, "test")
     print(type(result)) # This shows the json converted as a python dictionary
     return result
 

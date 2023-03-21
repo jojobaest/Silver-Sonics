@@ -68,12 +68,12 @@ def nearestValue(v, n): # n is # of segments
     index = roundHalfUp(v / increment)
     return index * increment
 
-def highContrast(my_url, filename):
-    my_url = "https://sallysbakingaddiction.com/wp-content/uploads/2017/06/moist-chocolate-cupcakes-5.jpg"
-    filename = "images\cupcake.jpg"
+def highContrast(my_url, input_name):
+    file_type = my_url[-3:]
+    file_name = "images\\" + input_name + file_type
 
-    urllib.request.urlretrieve(my_url, filename)
-    input = Image.open(filename)
+    urllib.request.urlretrieve(my_url, file_name)
+    input = Image.open(file_name)
 
     pixel_map = input.load()
 
@@ -95,5 +95,5 @@ def highContrast(my_url, filename):
 
             pixel_map[i, j] = (int(rNew), int(gNew), int(bNew))
 
-    input.save("edited-"+filename)
+    input.save("edited-"+file_name+file_type)
     input.show()

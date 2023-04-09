@@ -69,7 +69,8 @@ def nearestValue(v, n): # n is # of segments
     return index * increment
 
 def highContrast(my_url, input_name):
-    file_type = my_url[-3:]
+    index = my_url.rfind('.')
+    file_type = my_url[index:]
     file_name = "images\\" + input_name + file_type
 
     urllib.request.urlretrieve(my_url, file_name)

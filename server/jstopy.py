@@ -17,10 +17,10 @@ def test():
     print(type(output))
     result = json.loads(output) # This converts the json output to a python dictionary
     print(result) # Printing the new dictionary
-    highContrast(result, "test")
+    # highContrast(result, "test")
     print(type(result)) # This shows the json converted as a python dictionary
     return result
 
 if __name__ == '__main__':
-    app.run(port=5000,debug=True)
+    app.run(host='0.0.0.0',port=5000,debug=True)
 

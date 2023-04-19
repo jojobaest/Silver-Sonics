@@ -6,7 +6,7 @@
     "content_scripts": [{
         "matches": ["<all_urls>"],
         "all_frames": true,
-        "js": ["js/jquery.js","js/contentScript.js"]
+        "js": ["js/jquery.js","js/contentScript2.js"]
     }],
     "background": {
         "service_worker": "js/background.js",

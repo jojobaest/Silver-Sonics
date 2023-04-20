@@ -19,7 +19,7 @@ Maybe a diagram could be thrown in here... audi's extension diagram maybe? idk
 ## Usage
 To use the extension...
 1. Download the repository onto your computer as a ZIP and unzip the file.
-2. Open your web browser and go to settings. At the bottom of the left toolbar, there is a button that says Extensions. It will take you to the page where extensions can be uploaded. <img src="/images/extension_location.png" height=150>
+2. Open your web browser and go to settings. At the bottom of the left toolbar, there is a button that says Extensions. It will take you to the page where extensions can be uploaded. <img src="/images/extension_location.png" height=500>
 
 3. Click the Load Unpacked button
 4. Navigate to the extension folder in the Silver-Sonics folder you unzipped in step 1

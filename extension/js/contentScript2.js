@@ -1,46 +1,68 @@
-let images = document.getElementsByTagName("img");
-let imgData;
-let originalPixels;
-let currentPixels;
-for (let i = 0; i < images.length; i++) {
-  var srcImage = images[i];
+// document.getElementById("myButton").addEventListener("click", highContrastPage);
+highContrastPage();
+function highContrastPage() {
+  var images = document.getElementsByTagName("img");
 
-  var canvas = $("<canvas>");
+  let imgData;
+  let currentPixels;
+  for (let i = 0; i < images.length; i++) {
+    try {
+      let srcImage = images[i];
+      // chrome.runtime.sendMessage(
+      //   { msg: "image", index: i },
+      //   function ({ data, index }) {
+      //     images[index].src = data.link;
+      //     // images[index].src = "https://i.imgur.com/MvJTKSI.gif";
+      //   }
+      // );
 
-  canvas.width = srcImage.width;
-  canvas.height = srcImage.height;
+      // var canvas = $("<canvas>");
+      // const canvas = document.getElementById("canvas");
+      var canvas = document.createElement("canvas");
 
-  var ctx = canvas.getContext("2d");
-  console.log(ctx);
-  ctx.drawImage(img, 0, 0, srcImage.width, srcImage.height);
+      canvas.width = srcImage.width;
+      canvas.height = srcImage.height;
 
-  imgData = ctx.getImageData(0, 0, srcImage.width, srcImage.height);
-  originalPixels = imgData.data.slice(); // slice creates a shallow copy
-  currentPixels = imgData.data.slice(); // slice creates a shallow copy
+      var ctx = canvas.getContext("2d");
+      console.log(ctx);
+      ctx.drawImage(srcImage, 0, 0, srcImage.width, srcImage.height);
 
-  for (let i = 0; i < srcImage.height; i++) {
-    for (let j = 0; j < srcImage.width; j++) {
-      addContrast(j, i);
+      console.log(srcImage);
+      srcImage.crossOrigin = "Anonymous"; // since webpages have accessing stuff
+
+      imgData = ctx.getImageData(0, 0, srcImage.width, srcImage.height);
+      currentPixels = imgData.data.slice(); // slice creates a shallow copy
+
+      for (let i = 0; i < srcImage.height; i++) {
+        for (let j = 0; j < srcImage.width; j++) {
+          addContrast(currentPixels, j, i, srcImage.width);
+        }
+      }
+
+      for (let i = 0; i < imgData.data.length; i++) {
+        imgData.data[i] = currentPixels[i];
+      }
+
+      // Update the 2d rendering canvas with the image we just updated so the user can see
+      ctx.putImageData(imgData, 0, 0, 0, 0, srcImage.width, srcImage.height);
+
+      var dataURL = canvas.toDataURL();
+      images[i].src = dataURL; //"https://i.imgur.com/MvJTKSI.gif";
+      console.log("image changed!");
+    } catch (err) {
+      console.log(err);
     }
   }
-
-  for (let i = 0; i < imgData.data.length; i++) {
-    imgData.data[i] = currentPixels[i];
-  }
-
-  var dataURL = canvas.toDataURL();
-  images[index].src = dataURL;
 }
 
-// The image is stored as a 1d array with red first, then green, and blue
-const R_OFFSET = 0;
-const G_OFFSET = 1;
-const B_OFFSET = 2;
+function addContrast(currentPixels, x, y, width) {
+  const R_OFFSET = 0;
+  const G_OFFSET = 1;
+  const B_OFFSET = 2;
 
-function addContrast(x, y) {
-  const redIndex = getIndex(x, y) + R_OFFSET;
-  const greenIndex = getIndex(x, y) + G_OFFSET;
-  const blueIndex = getIndex(x, y) + B_OFFSET;
+  const redIndex = getIndex(x, y, width) + R_OFFSET;
+  const greenIndex = getIndex(x, y, width) + G_OFFSET;
+  const blueIndex = getIndex(x, y, width) + B_OFFSET;
 
   const redValue = currentPixels[redIndex];
   const greenValue = currentPixels[greenIndex];
@@ -102,7 +124,7 @@ function rgb_to_hsv(r, g, b) {
 
 function hsv_to_rgb(h, s, v) {
   c = v * s;
-  x = c * (1 - abs(((h / 60) % 2) - 1));
+  x = c * (1 - Math.abs(((h / 60) % 2) - 1));
   m = v - c;
 
   if (h < 60) {
@@ -130,6 +152,6 @@ function nearestValue(v, n) {
 }
 
 // Given the x, y index, return what position it should be in a 1d array
-function getIndex(x, y) {
-  return (x + y * srcImage.width) * 4;
+function getIndex(x, y, width) {
+  return (x + y * width) * 4;
 }

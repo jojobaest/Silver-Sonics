@@ -1,6 +1,7 @@
 document.getElementById("myButton").addEventListener("click", myFunction);
 
 function myFunction() {
+  // sets document to active tab instead of extension
   chrome.tabs.query({ active: true, currentWindow: true }).then(function (tabs) {
     var activeTab = tabs[0];
     var activeTabId = activeTab.id;
@@ -53,7 +54,5 @@ return links //return array
 */
 
 /*
-above is a code snippet that will get us a list of all the links of images on a page. it worked for me when i coded it randomly
-in my console page but i'm not sure how to integrate it into the current code smoothly. right now the current code only takes the first 
-instance of the <img> tag in the html page
+above is a code snippet that will get us a list of all the links of images on a page. 
 */

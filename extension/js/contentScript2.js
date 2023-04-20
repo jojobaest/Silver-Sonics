@@ -1,23 +1,25 @@
-// document.getElementById("myButton").addEventListener("click", highContrastPage);
-highContrastPage();
+document.getElementById("myButton").addEventListener("click", switchActiveTab); // when button is clicked, call switchActiveTab
+
+function switchActiveTab(){
+  chrome.tabs.query({ active: true, currentWindow: true }).then(function (tabs) { 
+    var activeTab = tabs[0]; // activeTab = tab user is currently on
+    var activeTabId = activeTab.id;
+    return chrome.scripting.executeScript({
+      target: { tabId: activeTabId }, // allows us to access the current webpage when using document in the highContrast 
+      injectImmediately: true,  // uncomment this to make it execute straight away, other wise it will wait for document_idle
+      func: highContrastPage // call highContrastPage
+    });
+  })
+}
+
 function highContrastPage() {
   var images = document.getElementsByTagName("img");
-
   let imgData;
   let currentPixels;
   for (let i = 0; i < images.length; i++) {
     try {
       let srcImage = images[i];
-      // chrome.runtime.sendMessage(
-      //   { msg: "image", index: i },
-      //   function ({ data, index }) {
-      //     images[index].src = data.link;
-      //     // images[index].src = "https://i.imgur.com/MvJTKSI.gif";
-      //   }
-      // );
 
-      // var canvas = $("<canvas>");
-      // const canvas = document.getElementById("canvas");
       var canvas = document.createElement("canvas");
 
       canvas.width = srcImage.width;

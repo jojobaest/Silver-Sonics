@@ -13,7 +13,6 @@
         "type": "module"
     },
     "permissions": [
-        "https://some-random-api.ml/*",
         "scripting",
         "activeTab"
     ],

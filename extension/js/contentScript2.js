@@ -1,19 +1,35 @@
-document.getElementById("myButton").addEventListener("click", switchActiveTab); // when button is clicked, call switchActiveTab
+document
+  .getElementById("contrastButton")
+  .addEventListener("click", switchActiveTab); // when button is clicked, call switchActiveTab
 
-function switchActiveTab(){
-  chrome.tabs.query({ active: true, currentWindow: true }).then(function (tabs) { 
-    var activeTab = tabs[0]; // activeTab = tab user is currently on
-    var activeTabId = activeTab.id;
-    return chrome.scripting.executeScript({
-      target: { tabId: activeTabId }, // allows us to access the current webpage when using document in the highContrast 
-      injectImmediately: true,  // uncomment this to make it execute straight away, other wise it will wait for document_idle
-      func: highContrastPage // call highContrastPage
+function switchActiveTab() {
+  chrome.tabs
+    .query({ active: true, currentWindow: true })
+    .then(function (tabs) {
+      var activeTab = tabs[0]; // activeTab = tab user is currently on
+      var activeTabId = activeTab.id;
+      return chrome.scripting.executeScript({
+        target: { tabId: activeTabId }, // allows us to access the current webpage when using document in the highContrast
+        injectImmediately: true, // uncomment this to make it execute straight away, other wise it will wait for document_idle
+        func: highContrastPage, // call highContrastPage
+      });
     });
-  })
 }
+var contrast;
 
 function highContrastPage() {
+  if (contrast == true) {
+    // turn contrast off by reloading page
+    console.log("turning contrast off");
+    contrast = false;
+    location.reload();
+    return false;
+  } else {
+    // run image processing code!
+    contrast = true;
+  }
   var images = document.getElementsByTagName("img");
+  console.log("images.length: " + images.length);
   let imgData;
   let currentPixels;
   for (let i = 0; i < images.length; i++) {
@@ -50,11 +66,12 @@ function highContrastPage() {
 
       var dataURL = canvas.toDataURL();
       images[i].src = dataURL; //"https://i.imgur.com/MvJTKSI.gif";
-      console.log("image changed!");
+      console.log("image " + i + "/" + images.length + " changed!");
     } catch (err) {
       console.log(err);
     }
   }
+  console.log("done!");
 }
 
 function addContrast(currentPixels, x, y, width) {

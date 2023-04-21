@@ -1,6 +1,8 @@
 # Image Editing Chrome Extension By Silver Sonics
 ## Description
 The Image Editing Chrome Extension is a google chrome extension that makes the images on whatever tab is active high-contrast. Rather than a normal image editing software, our extension does not require the image to be downloaded locally or uploaded onto a page.  
+![Visual of Our Product in Action](/images/visualDiagram.png)
+
 ## Frameworks & Languages Used
 ### Frameworks
 ```diff

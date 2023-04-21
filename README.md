@@ -14,7 +14,7 @@ Visual studio code - main IDE
 Github - used for sharing code
 Docker - used for making a docker image
 ## Navigating the Code
-When the extension is run currently, only the code within the extension folder is run. The code outside the extension folder is a work in progress and will be discussed more in the releases for the future section. Along with that, the contentScript.js and jquery.js files are also for the parts that we could not finish in time and thus do not currently add to the extension.
+When the extension is run currently, only the code within the extension folder is run. The code outside the extension folder is a work in progress and will be discussed more in the releases for the future section. Along with that, the contentScript.js and jquery.js files are also for the parts that we could not finish in time and thus do not currently add to the extension. The following files are marked with comments in the code to help the reader navigate through what we did:
 
 index.html: this file holds our structure for the user interface
 styles.css: this file holds our styling for the user interface

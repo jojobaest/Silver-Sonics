@@ -2,16 +2,17 @@
 ## Description
 The Image Editing Chrome Extension is a google chrome extension that makes the images on whatever tab is active high-contrast. Rather than a normal image editing software, our extension does not require the image to be downloaded locally or uploaded onto a page.  
 ![Visual of Our Product in Action](/images/visualDiagram.png)
-
 ## Frameworks & Languages Used
 ### Frameworks
-```diff
-- Flask?
-```
+Jupyter notebook - used for machine learning code
 ### Languages 
-Python - Machine learning, server
+Python - Machine learning, server, alternate (previous iteration) high contrast script
 Javascript - High contrast script
 HTML, CSS - User Interface
+### Other Tools
+Visual studio code - main IDE
+Github - used for sharing code
+Docker - used for making a docker image
 ## Navigating the Code
 When the extension is run currently, only the code within the extension folder is run. The code outside the extension folder is a work in progress and will be discussed more in the releases for the future section. Along with that, the contentScript.js and jquery.js files are also for the parts that we could not finish in time and thus do not currently add to the extension.
 

@@ -28,35 +28,40 @@ function highContrastPage() {
     // run image processing code!
     contrast = true;
   }
-  var images = document.getElementsByTagName("img");
+
+  var images = document.getElementsByTagName("img"); // get all images in the page and store in array
   console.log("images.length: " + images.length);
+
   let imgData;
   let currentPixels;
   for (let i = 0; i < images.length; i++) {
+    // go thru each of the images on the page
     try {
+      // need to try since some images are locked and may throw an access error
       let srcImage = images[i];
 
       var canvas = document.createElement("canvas");
-
       canvas.width = srcImage.width;
       canvas.height = srcImage.height;
 
-      var ctx = canvas.getContext("2d");
+      var ctx = canvas.getContext("2d"); // flatten image to 2D, so image type doesn't matter
       console.log(ctx);
-      ctx.drawImage(srcImage, 0, 0, srcImage.width, srcImage.height);
+      ctx.drawImage(srcImage, 0, 0, srcImage.width, srcImage.height); // would display image
 
-      console.log(srcImage);
-      srcImage.crossOrigin = "Anonymous"; // since webpages have accessing stuff
+      // since some webpages have accessing restrictions, this tries to remove those restrictions
+      srcImage.crossOrigin = "Anonymous";
 
-      imgData = ctx.getImageData(0, 0, srcImage.width, srcImage.height);
-      currentPixels = imgData.data.slice(); // slice creates a shallow copy
+      imgData = ctx.getImageData(0, 0, srcImage.width, srcImage.height); // get image data
+      currentPixels = imgData.data.slice(); // slice creates a shallow copy of the image data
 
+      //go through each pixel of the image and add contrast
       for (let i = 0; i < srcImage.height; i++) {
         for (let j = 0; j < srcImage.width; j++) {
           addContrast(currentPixels, j, i, srcImage.width);
         }
       }
 
+      //change original image data to new image data
       for (let i = 0; i < imgData.data.length; i++) {
         imgData.data[i] = currentPixels[i];
       }
@@ -64,48 +69,60 @@ function highContrastPage() {
       // Update the 2d rendering canvas with the image we just updated so the user can see
       ctx.putImageData(imgData, 0, 0, 0, 0, srcImage.width, srcImage.height);
 
+      //converting canvas to a src URL so that we can directly edit the page's image
       var dataURL = canvas.toDataURL();
-      images[i].src = dataURL; //"https://i.imgur.com/MvJTKSI.gif";
+      images[i].src = dataURL;
       console.log("image " + i + "/" + images.length + " changed!");
     } catch (err) {
       console.log(err);
     }
   }
-  console.log("done!");
+  console.log("done editing all of the images!");
 }
 
+// input: array of pixels, the coordinates of the target pixel, and size of pixel array
 function addContrast(currentPixels, x, y, width) {
+  //offsets for array indexing, since the pixels are stored like [red, green, blue, alpha] values
   const R_OFFSET = 0;
   const G_OFFSET = 1;
   const B_OFFSET = 2;
 
+  // getIndex will get the index of the first value representing the pixel
   const redIndex = getIndex(x, y, width) + R_OFFSET;
   const greenIndex = getIndex(x, y, width) + G_OFFSET;
   const blueIndex = getIndex(x, y, width) + B_OFFSET;
 
+  // gets the red, green, and blue(RGB) values of the pixel
   const redValue = currentPixels[redIndex];
   const greenValue = currentPixels[greenIndex];
   const blueValue = currentPixels[blueIndex];
 
+  // converts the RGB values to hue, saturation, and value(HSV) for editing
   var [hueValue, satValue, valValue] = rgb_to_hsv(
     redValue,
     greenValue,
     blueValue
   );
 
-  valValue = nearestValue(v, 2);
-  satValue = nearestValue(s, 2);
+  // image processing!
+  // rounds the value and saturation to the nearest interval of thirds
+  valValue = nearestValue(valValue, 2);
+  satValue = nearestValue(satValue, 2);
+
+  // convert new HSV values back into RGB
   const [nextRed, nextGreen, nextBlue] = hsv_to_rgb(
     hueValue,
     satValue,
     valValue
   );
 
+  // update current image data array
   currentPixels[redIndex] = nextRed;
   currentPixels[greenIndex] = nextGreen;
   currentPixels[blueIndex] = nextBlue;
 }
 
+// conversion from rgb(red, green, blue) values to hsv(hue, saturation, value) values
 function rgb_to_hsv(r, g, b) {
   r = r / 255;
   g = g / 255;
@@ -141,10 +158,11 @@ function rgb_to_hsv(r, g, b) {
   return [h, s, v];
 }
 
+// conversion from hsv(hue, saturation, value) values to rgb(red, green, blue) values
 function hsv_to_rgb(h, s, v) {
-  c = v * s;
-  x = c * (1 - Math.abs(((h / 60) % 2) - 1));
-  m = v - c;
+  var c = v * s;
+  var x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  var m = v - c;
 
   if (h < 60) {
     [r, g, b] = [c, x, 0];
@@ -163,6 +181,7 @@ function hsv_to_rgb(h, s, v) {
   return [(r + m) * 255, (g + m) * 255, (b + m) * 255];
 }
 
+// rounds the value to the nearest value
 function nearestValue(v, n) {
   // n is # of segments
   let increment = 1 / n;
@@ -170,7 +189,9 @@ function nearestValue(v, n) {
   return index * increment;
 }
 
-// Given the x, y index, return what position it should be in a 1d array
+// Given the (x, y) coordinate and the width of the image, return what position it should be in a 1d array
+// example: currentPixels = [128, 255, 0, 255, 186, 182, 200, 255, 186, 255, 255, 255, 127, 60, 20, 128] for a 2x2 image
+// passing in an x and y of (1, 0) means the pixel is in the upper right corner, so getIndex will return 4
 function getIndex(x, y, width) {
   return (x + y * width) * 4;
 }
